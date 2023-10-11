@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"C:/Shaun/container/k8s/lab1/k8s-centos7/master","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

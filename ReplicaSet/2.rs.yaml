@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rsapp
+spec:
+  replicas: 3 # số lượng pod nhân bản mà nó sẽ quản lý có trên cluster,
+  selector:
+    matchLabels:
+      app: rsapp # quản lý những cái pod có nhãn app: rsapp
+  template: # template tạo pod
+    metadata:
+      name: rsapp
+      labels:
+        app: rsapp
+    spec:
+      containers:
+        - name: app
+          image: ichte/swarmtest:node
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 8085
