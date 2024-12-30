@@ -1,4 +1,4 @@
-https://xuanthulab.net/gioi-thieu-va-cai-dat-kubernetes-cluster.html
+[Reference doc](https://xuanthulab.net/gioi-thieu-va-cai-dat-kubernetes-cluster.html)
 
 - tạo virtualbox guest VM bằng vagrant
 - cài đặt docker lên guestVM bằng Ansible
@@ -179,3 +179,5 @@ CronJob (cj) - chạy các Job theo một lịch định sẵn. Việc lên lị
 - Để Ingress hoặt động, hệ thồng cần một điều khiển ingress trước (Ingress controller), có nhiều loại để chọn sử dụng (tham khảo Ingress Controller)
 
 - NGINX Ingress Controller for Kubernetes. HAProxy Ingress Controller
+
+# Sử dụng terrafrom support k8s
