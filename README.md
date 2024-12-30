@@ -127,5 +127,55 @@ chuyển sang dùng context: kubernetes-admin@kubernetes
 # ReplicaSet trong Kubernetes
 
 - [ReplicaSet](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#replicaset-v1-apps) là một điều khiển Controller - nó đảm bảo ổn định các nhân bản (số lượng và tình trạng của POD, replica) khi đang chạy.
+- `kubectl apply -f .\2.rs.yaml` => create ReplicaSet
 
-#
+# Deployment trong Kubernetes triển khai cập nhật và scale
+
+- Deployment quản lý một nhóm Pod - các Pod được nhân bản, nó tự động thay thế các Pod bị lỗi, không phản hồi bằng pod mới tạo ra. Như vậy, deploymnet đảm bảo ứng dụng của bạn có một (hay nhiều) Pod để phục vụ các yêu cầu.
+
+- Deployment sử dụng mẫu Pod (Pod template -chứa định nghĩa / thiết lập về Pod) để tạo các Pod (các nhân bản replica), khi template này thay đổi, các Pod mới sẽ được tạo để thay thế Pod cũ ngay lập tức.
+
+- Deployment tạo ra các ReplicaSet, ReplicaSet tạo ra và quản lý các pods
+
+# Metrics Server trên Kubernetes
+
+- metrics server trong kubernetes ([metrics server](https://github.com/kubernetes-sigs/metrics-server)) giám sát về tài nguyên sử dụng trên cluster, cung cấp các API để các thành phần khác truy vấn đến biết được và mức độ sử dụng tài nguyên (CPU, Memory) của Pod, Node ... Cần có Metric Server để HPA hoạt động chính xác
+
+# [Service](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#replicaset-v1-apps) và Secret Tls trong Kubernetes
+
+- Service là một resouce sẽ tạo ra một single, constant point của một nhóm Pod phía sau nó. Mỗi service sẽ có một địa chỉ IP và port không đổi, trừ khi ta xóa nó đi và tạo lại. Client sẽ mở connection tới service, và connection đó sẽ được dẫn tới một trong những Pod ở phía sau.
+- Service (micro-service) trong Kubernetes là một dịch vụ mạng, tạo cơ chế cân bằng tải (load balancing) truy cập đến các điểm cuối (thường là các Pod) mà Service đó phục vụ.
+- truy cập đến các pod thông qua ClusterIP Service, khi các được tạo mới quá nhiều
+
+<image src="./image/ClusterIPService.png" />
+
+# DaemonSet trong Kubernetes
+
+- DaemonSet hoạt động tương tự như ReplicaSet, nghĩa là nó có thể tạo và quản lý các pod.  DaemonSet tạo ra trên mỗi Node chỉ có 1 pod 
+- DaemonSet (ds) đảm bảo chạy trên mỗi NODE một bản copy của POD. Triển khai DaemonSet khi cần ở mỗi máy (Node) một POD, thường dùng cho các ứng dụng như thu thập log, tạo ổ đĩa trên mỗi Node ... Dưới đây là ví dụ về DaemonSet, nó tạo tại mỗi Node một POD chạy nginx
+
+# Job trong Kubernetes
+
+- Job (jobs) có chức năng tạo các POD đảm bảo nó chạy và kết thúc thành công. Khi các POD do Job tạo ra chạy và kết thúc thành công thì Job đó hoàn thành. Khi bạn xóa Job thì các Pod nó tạo cũng xóa theo. Một Job có thể tạo các Pod chạy tuần tự hoặc song song. Sử dụng Job khi muốn thi hành một vài chức năng hoàn thành xong thì dừng lại (ví dụ backup, kiểm tra ...)
+
+Khi Job tạo Pod, Pod chưa hoàn thành nếu Pod bị xóa, lỗi Node ... nó sẽ thực hiện tạo Pod khác để thi hành tác vụ.
+
+# CronJob trong Kubernetes
+
+CronJob (cj) - chạy các Job theo một lịch định sẵn. Việc lên lịch cho CronJob khai báo giống Cron của Linux. [Xem Sử dụng Cron, Crontab từ động chạy script trên Server Linux](https://xuanthulab.net/su-dung-cron-crontab-tu-dong-chay-script-tren-server-linux.html)
+
+# Persistent Volume (pv) và Persistent Volume Claim (pvc) trong Kubernetes
+
+- Persistent Volume (pv) là một phần không gian lưu trữ dữ liệu trong cluster, các PersistentVolume giống với Volume bình thường tuy nhiên nó tồn tại độc lập vói Pod (Pod bị xóa Pv vẫn tồn tại), có nhiều loại PersistentVolume có triển khai như NFS (dịch vụ chia sẻ file), Clusterfs,.. 
+- Persistent Volume Claim (pvc) là yêu cầu sử dụng không gian lưu trữ (sử dụng Pv). hình dung pv giống như Node, pvc giống như Pod. Pod chạy nó sử dụng tài nguyên của Node, pvc hoạt động nó sử dụng tài nguyên của Pv
+- 1 pv chỉ có một pvc
+
+# Ingress 
+
+- Ingress là thành phần được dùng để điều hướng các yêu cầu traffic giao thức HTTP và HTTPS từ bên ngoài (interneet) vào các dịch vụ bên trong Cluster.
+
+- Ingress chỉ để phục vụ các cổng, yêu cầu HTTP, HTTPS còn các loại cổng khác, giao thức khác để truy cập được từ bên ngoài thì dùng Service với kiểu NodePort và LoadBalancer
+
+- Để Ingress hoặt động, hệ thồng cần một điều khiển ingress trước (Ingress controller), có nhiều loại để chọn sử dụng (tham khảo Ingress Controller)
+
+- NGINX Ingress Controller for Kubernetes. HAProxy Ingress Controller
